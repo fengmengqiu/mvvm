@@ -93,26 +93,32 @@ Compile.prototype = {
 
 // 指令处理集合
 var compileUtil = {
+    //解析v-text
     text: function(node, vm, exp) {
         this.bind(node, vm, exp, 'text');
     },
-
+    //解析v-html
     html: function(node, vm, exp) {
         this.bind(node, vm, exp, 'html');
     },
-
+    //解析v-model
     model: function(node, vm, exp) {
+        //实现数据的初始化显示和创建对应的watcher
         this.bind(node, vm, exp, 'model');
 
         var me = this,
+            //得到输入的最新值
             val = this._getVMVal(vm, exp);
         node.addEventListener('input', function(e) {
+            //得到输入的最新值
             var newValue = e.target.value;
+           // 如果值没有变化，直接结束
             if (val === newValue) {
                 return;
             }
-
+            //将最新的value保存给表达式所对应的属性
             me._setVMVal(vm, exp, newValue);
+            //保存最新的值
             val = newValue;
         });
     },
